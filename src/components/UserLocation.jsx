@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 
 function UserLocation() {
-    const [location, setLocation] = useState({ latitude: "", longitude: "" })
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-    const [weather, setWeather] = useState(null)
-    const apiKey = process.env.REACT_APP_API_KEY
+  const [location, setLocation] = useState({ latitude: "", longitude: "" })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [weather, setWeather] = useState(null)
+  const apiKey = process.env.REACT_APP_API_KEY
 
   useEffect(() => {
 
@@ -20,69 +20,87 @@ function UserLocation() {
                 setLoading(false)
             },
             (error) => {
-                // If there is an error or user denies permission, fetch location using IP
                 fetchByIP();
               }
         )
     } else {
         fetchByIP()
+
     } 
    console.log(location)
-    fetchWeather()
-    console.log(weather)
   }, [])
 
-
-    const fetchByIP = () => {
-        fetch("https://geolocation-db.com/json/")
-        .then((response) => response.json())
-        .then((data) => {
-            setLocation({
-            latitude: data.latitude,
-            longitude: data.longitude,
-            });
-            setLoading(false);
-        })
-        .catch((error) => {
-            setError("Error fetching geolocation data");
-            console.error("Error fetching geolocation data:", error);
-            setLoading(false);
-        });
+  useEffect(() => {
+    if (location.latitude && location.longitude) {
+      fetchWeather()
     }
+  }, [location])
 
-    const fetchWeather = () => {
 
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}`)
-            .then((response) => response.json())
-            .then((data) => {
-            setWeather(data)
-            console.log(data)
-                }) .catch((error) => {
-                setError("Error fetching weather data")
-                })
-    }
+  const fetchByIP = () => {
+      fetch("https://geolocation-db.com/json/")
+      .then((response) => response.json())
+      .then((data) => {
+          setLocation({
+          latitude: data.latitude,
+          longitude: data.longitude,
+          });
+          setLoading(false);
+      })
+      .catch((error) => {
+          setError("Error fetching geolocation data");
+          console.error("Error fetching geolocation data:", error);
+          setLoading(false);
+      });
+  }
+  console.log(apiKey)
+  
+  const fetchWeather = () => {
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&units=metric&lon=${location.longitude}&appid=${apiKey}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setWeather(data)
+        console.log(data)
+      }) .catch((error) => {
+          setError("Error fetching weather data")
+      })
+  }
 
-    
+  const iconUrl = `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}.png`;
+
 
   return (
-    <div>
+    <div className="container">
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (
         <div>
-          <p>Your latitude is: {location.latitude}</p>
-          <p>Your longitude is: {location.longitude}</p>
-          {weather && (
+          {weather && weather.main && (
             <div>
-              <p>Weather: {weather.weather[0].description}</p>
-              <p>Temperature: {weather.main.temp} °C</p>
-              {/* Add more weather details as needed */}
+              <div className="city">
+                <p>{weather.name} </p>
+                <img className="weather-icon" 
+                src={iconUrl}
+                alt={"Weather Icon"} style={{width: "100px"}}/>
+              </div>
+              <div className="weather">
+                <p>Weather: {weather.weather[0].description}</p>
+                <p>Temperature: {weather.main.temp} °C</p>
+              </div>
+              <div className="weather">
+                <p>Humidity: {weather.main.humidity} %</p>
+                <p>Feels Like: {weather.main.feels_like} °C</p>
+              </div>
+              <div className="weather">
+                <p>Sunrise: {new Date(weather.sys.sunrise * 1000).toLocaleTimeString()}</p>
+                <p>Sunset: {new Date(weather.sys.sunset * 1000).toLocaleTimeString()}</p>
+              </div>
             </div>
           )}
         </div>
-      )}
+      )} 
     </div>
   );
 }

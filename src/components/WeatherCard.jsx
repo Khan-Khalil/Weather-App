@@ -1,59 +1,17 @@
 import React, { useState, useEffect } from "react";
 
 
-function UserLocation() {
-  const [location, setLocation] = useState({ latitude: "", longitude: "" })
+function WeatherCard({ location }) {
+  const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [weather, setWeather] = useState(null)
   const apiKey = process.env.REACT_APP_API_KEY
-
-  useEffect(() => {
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setLocation({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-                setLoading(false)
-            },
-            (error) => {
-                fetchByIP();
-              }
-        )
-    } else {
-        fetchByIP()
-
-    } 
-   console.log(location)
-  }, [])
 
   useEffect(() => {
     if (location.latitude && location.longitude) {
       fetchWeather()
     }
-  }, [location])
-
-
-  const fetchByIP = () => {
-      fetch("https://geolocation-db.com/json/")
-      .then((response) => response.json())
-      .then((data) => {
-          setLocation({
-          latitude: data.latitude,
-          longitude: data.longitude,
-          });
-          setLoading(false);
-      })
-      .catch((error) => {
-          setError("Error fetching geolocation data");
-          console.error("Error fetching geolocation data:", error);
-          setLoading(false);
-      });
-  }
-  console.log(apiKey)
+}, [location])
   
   const fetchWeather = () => {
     fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&units=metric&lon=${location.longitude}&appid=${apiKey}`)
@@ -61,13 +19,14 @@ function UserLocation() {
       .then((data) => {
         setWeather(data)
         console.log(data)
+        setLoading(false)
       }) .catch((error) => {
           setError("Error fetching weather data")
       })
   }
 
   const iconUrl = `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}.png`;
-
+console.log()
 
   return (
     <div className="container">
@@ -105,4 +64,4 @@ function UserLocation() {
   );
 }
 
-export default UserLocation;
+export default WeatherCard;

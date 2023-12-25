@@ -1,6 +1,7 @@
 
 import './App.css';
-import UserLocation from "./components/UserLocation"
+import WeatherCard from "./components/WeatherCard"
+import Location from "./components/Location"
 
 
 fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=nature")
@@ -15,9 +16,18 @@ fetch("https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&que
     })
 
 function App() {
+  const { location, error } = Location()
+
+
+  //get user location using useLocation hook
+  // { lat, lng, loading, error  } = useLocation()
+
+  //Make weatehr card component which accepts location as a prop
+
+  // make a function to fetch background image and set it in a state. use img tag to render it
   return (
     <div>
-      <UserLocation />
+      <WeatherCard location={location} error={error} />
     </div>
   );
 }

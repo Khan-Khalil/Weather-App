@@ -31,7 +31,7 @@ console.log()
   return (
     <div className="container">
       {loading ? (
-        <p>Loading...</p>
+        <p>Loading Weather...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (

@@ -3,27 +3,26 @@ import React, { useState, useEffect } from  "react";
 function Location() {
     const [location, setLocation] = useState({ latitude: "", longitude: "" })
     const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(true)
 
 
     useEffect(() => {
-
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     setLocation({
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                    });
+                    })
+                    setLoading(false)
                 },
                 (error) => {
-                    fetchByIP();
+                    fetchByIP()
                   }
             )
         } else {
             fetchByIP()
-    
         } 
-       console.log(location)
     }, [])
     
      
@@ -35,16 +34,15 @@ function Location() {
             setLocation({
             latitude: data.latitude,
             longitude: data.longitude,
-            });
+            })
+            setLoading(false)
         })
         .catch((error) => {
             setError("Error fetching geolocation data");
-            console.error("Error fetching geolocation data:", error);
+            setLoading(false)
         });
     }
-
-    return { location, error };
-    console.log(location)
+    return { location, error, loading }
 }
 
 export default Location;

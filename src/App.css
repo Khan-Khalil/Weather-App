@@ -40,3 +40,10 @@ text-shadow: 0px 0px 20px #242424;
   justify-content: space-between;
   padding: 0% 10px;
 }
+
+.background {
+  display: flex;
+  background-size: cover;
+  flex-direction: column;
+  min-height: 100vh;
+}

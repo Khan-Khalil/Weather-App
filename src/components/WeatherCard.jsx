@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 
-function WeatherCard({ location }) {
+function WeatherCard({ location, onWeatherChange }) {
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -11,22 +11,21 @@ function WeatherCard({ location }) {
     if (location.latitude && location.longitude) {
       fetchWeather()
     }
-}, [location])
+  }, [location])
   
-  const fetchWeather = () => {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&units=metric&lon=${location.longitude}&appid=${apiKey}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setWeather(data)
-        console.log(data)
-        setLoading(false)
-      }) .catch((error) => {
-          setError("Error fetching weather data")
-      })
+  const fetchWeather = async () => {
+    try {
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&units=metric&lon=${location.longitude}&appid=${apiKey}`)
+      const data = await response.json()
+      setWeather(data)
+      setLoading(false)
+      onWeatherChange(data.weather[0].description)
+    } catch (error) {
+      setError("Error fetching weather data")
+    }
   }
 
-  const iconUrl = `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}.png`;
-console.log()
+  const iconUrl = `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}.png`
 
   return (
     <div className="container">

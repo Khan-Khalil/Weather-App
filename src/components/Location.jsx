@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from  "react";
 
-function Location() {
+function useLocation() {
     const [location, setLocation] = useState({ latitude: "", longitude: "" })
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -45,4 +45,4 @@ function Location() {
     return { location, error, loading }
 }
 
-export default Location;
+export default useLocation;

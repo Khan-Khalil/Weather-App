@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react"
 
 function WeatherCard({ location, onWeatherChange }) {
   const [weather, setWeather] = useState(null)
@@ -25,6 +24,7 @@ function WeatherCard({ location, onWeatherChange }) {
     }
   }
 
+
   const iconUrl = `http://openweathermap.org/img/wn/${weather?.weather[0]?.icon}.png`
 
   return (
@@ -32,7 +32,7 @@ function WeatherCard({ location, onWeatherChange }) {
       {loading ? (
         <p>Loading Weather...</p>
       ) : error ? (
-        <p>{error}</p>
+        <p>Error fetching weather data: {error}</p>
       ) : (
         <div>
           {weather && weather.main && (

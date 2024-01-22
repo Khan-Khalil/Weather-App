@@ -3,7 +3,7 @@ import './App.css';
 import WeatherCard from "./components/WeatherCard"
 import useLocation from "./components/Location"
 import { useEffect, useState } from 'react';
-import BackgroundImage from "./components/BackgroundImage"
+import getBackgroundImage from "./components/BackgroundImage"
 
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
   useEffect(()=> {
     const fetchBackgroundImage = async () => {
       try {
-        const imageUrl = await BackgroundImage(weatherDescription)
+        const imageUrl = await getBackgroundImage(weatherDescription)
         setImage(imageUrl)
       } catch (error) {
         console.error(error)
@@ -25,11 +25,11 @@ function App() {
   },[weatherDescription])
 
   return (
-    <div className= "background" style={{ backgroundImage: image }}>
+    <div className="background" style={{ backgroundImage: image }}>
       {loading ? (
         <p>Loading location...</p>
       ) : error ? (
-        <p>{error}</p>
+        <p>Error loading location: {error}</p>
       ) : (
         <WeatherCard location={location} onWeatherChange={setWeatherDescription}/>
       )}

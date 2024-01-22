@@ -1,6 +1,6 @@
 
 
-async function  BackgroundImage(weatherDescription) {
+async function  getBackgroundImage(weatherDescription) {
     try {
         const response = await fetch(`https://apis.scrimba.com/unsplash/photos/random?orientation=landscape&query=${weatherDescription}`)
         if (!response.ok) {
@@ -13,4 +13,4 @@ async function  BackgroundImage(weatherDescription) {
       )`
     }
 }
-export default BackgroundImage
+export default getBackgroundImage
